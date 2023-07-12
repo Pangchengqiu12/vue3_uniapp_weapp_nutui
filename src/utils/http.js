@@ -1,17 +1,24 @@
-import { IP, TIMEOUT, routeWhiteList } from '@/utils/config.js'
+import { IP, TIMEOUT, routeWhiteList, ResultCode } from '@/utils/config.js'
 import { useMemberStore } from '@/stores'
 import { showToast } from '@/common/utils/util.js'
-const request = ({ method, url, param }, maxCount = 2) => {
+
+const defaultConfig = {
+  successMessage: false,
+  errorMessage: true,
+  cancelSame: false,
+  isRetry: false,
+  retryCount: 3,
+  loading: true,
+}
+
+const request = ({ method, url, param }, options) => {
   const memberStore = useMemberStore()
   return new Promise((resolve, reject) => {
-    uni.showLoading({ title: '加载中' })
-    let header
-    method === 'GET' || method === 'DELETE' || routeWhiteList.get(url)
-      ? (header = {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          Authorization: `Bearer ${memberStore?.userInfo?.accessToken}`,
-        })
-      : (header = { Authorization: `Bearer ${memberStore?.userInfo?.accessToken}` })
+    let header = {}
+    if (method === 'GET' || method === 'DELETE' || routeWhiteList.get(url)) {
+      header['Content-Type'] = 'application/x-www-form-urlencoded'
+    }
+    header.Authorization = `Bearer ${memberStore?.userInfo?.accessToken}`
     uni.request({
       url: IP + url,
       method,
@@ -19,96 +26,85 @@ const request = ({ method, url, param }, maxCount = 2) => {
       header,
       timeout: TIMEOUT,
       success: (res) => {
-        uni.hideLoading()
         if (res.statusCode !== 200) return
         let {
           data,
           data: { code, msg },
         } = res
-        switch (code) {
-          case 0:
-            resolve(data)
-            break
-          case 403:
-            uni.hideLoading()
-            uni.showModal({
-              title: '提示',
-              content: '当前用户未登陆，请前往登录页进行登陆',
-              success: (res) => {
-                if (res.confirm) {
-                  //跳转至授权页面
-                  uni.reLaunch({ url: '/pages/login/login' })
-                } else {
-                  uni.reLaunch({ url: '/pages/index/index' })
-                }
-              },
-            })
-            break
-          default:
-            showToast('error', msg)
-            reject(data)
+        if (code === ResultCode.SUCCESS) {
+          resolve(data)
+        } else if (code === ResultCode.LOGIN) {
+          uni.showModal({
+            title: '提示',
+            content: '当前用户未登陆，请前往登录页进行登陆',
+            success: (res) => {
+              //跳转登录页面
+              res.confirm ? uni.reLaunch({ url: '/pages/login/login' }) : uni.reLaunch({ url: '/pages/index/index' })
+            },
+          })
+        } else {
+          showToast('error', msg)
+          reject(data)
         }
       },
       fail: (error) => {
         let { errMsg } = error
-        uni.hideLoading()
         showToast('error', errMsg)
         reject(errMsg)
-        // if (errMsg === 'request:fail timeout') {
-        //   showToast('error', '网络请求超时')
-        //   reject('timeout')
-        // } else if (errMsg === 'request:fail HTTP错误') {
-        //   showToast('error', '请检查网络')
-        //   reject('newwork')
-        // } else {
-        //   showToast('error', errMsg)
-        //   reject(errMsg)
-        // }
+      },
+      complete: () => {
+        uni.hideLoading()
       },
     })
   }).catch((err) => {
-    maxCount <= 0 ? Promise.reject(err) : request({ method, url, param }, maxCount - 1)
+    options.isRetry && options.retryCount > 0
+      ? request({ method, url, param }, options.retryCount - 1)
+      : Promise.reject(err)
   })
 }
 
-export function $post(url, param, maxCount) {
+export function $post(url, param, config) {
+  const options = Object.assign({}, defaultConfig, config)
   return request(
     {
       method: 'POST',
       url,
       param,
     },
-    maxCount,
+    options,
   )
 }
 
-export function $get(url, param, maxCount) {
+export function $get(url, param, config) {
+  const options = Object.assign({}, defaultConfig, config)
   return request(
     {
       method: 'GET',
       url,
       param,
     },
-    maxCount,
+    options,
   )
 }
-export function $put(url, param, maxCount) {
+export function $put(url, param, config) {
+  const options = Object.assign({}, defaultConfig, config)
   return request(
     {
       method: 'PUT',
       url,
       param,
     },
-    maxCount,
+    options,
   )
 }
-export function $delete(url, param, maxCount) {
+export function $delete(url, param, config) {
+  const options = Object.assign({}, defaultConfig, config)
   return request(
     {
       method: 'DELETE',
       url,
       param,
     },
-    maxCount,
+    options,
   )
 }
