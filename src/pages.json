@@ -14,6 +14,12 @@
         "navigationBarTitleText": "",
         "navigationStyle": "custom"
       }
+    },
+    {
+      "path": "pages/demo/index",
+      "style": {
+        "navigationBarTitleText": "demo"
+      }
     }
   ],
   "globalStyle": {

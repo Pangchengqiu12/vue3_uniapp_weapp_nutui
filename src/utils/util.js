@@ -1,4 +1,4 @@
-import { IMGIP } from './config.js'
+import { IMGIP } from './request/config.js'
 //判断当前数据值是否为空获取是否定义但是没有赋值
 export const isNull = (value) => {
   if (value === null || value === undefined || value === '') {

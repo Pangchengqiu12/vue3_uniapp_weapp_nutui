@@ -1,28 +1,28 @@
 <template>
   <view class="page index">
+    <view class="nav">
+      <custom bgColor="white" :isBack="false">
+        <!-- <template #backText> 返回 </template> -->
+        <template #content> {{ navTitle }} </template>
+      </custom>
+    </view>
     <view class="main">
-      <index v-if="PageCur === 'index'" />
+      <index v-show="PageCur === 'index'" />
       <shop v-if="PageCur === 'shop'" ref="shopRef" />
     </view>
     <view class="tabbar">
-      <view class="action" @click="navChange" data-cur="index">
+      <view
+        class="action"
+        @click="navChange"
+        :data-cur="item.name"
+        :data-title="item.title"
+        v-for="item in route"
+        :key="item.name"
+      >
         <view class="cuIcon-cu-image">
-          <image
-            :src="PageCur === 'index' ? '../../static/tabBar/index_cur.png' : '../../static/tabBar/index.png'"
-            mode="heightFix"
-          ></image>
+          <image :src="PageCur === item.name ? item.icon : item.iconSel" mode="heightFix"></image>
         </view>
-        <view :class="PageCur === 'index' ? 'color_main' : ''">首页</view>
-      </view>
-
-      <view class="action" @click="navChange" data-cur="shop">
-        <view class="cuIcon-cu-image">
-          <image
-            :src="PageCur === 'shop' ? '../../static/tabBar/shop_cur.png' : '../../static/tabBar/shop.png'"
-            mode="heightFix"
-          ></image>
-        </view>
-        <view :class="PageCur === 'shop' ? 'color_main' : ''">商城</view>
+        <view :class="PageCur === item.name ? 'color_main' : ''">{{ item.title }}</view>
       </view>
     </view>
   </view>
@@ -33,12 +33,14 @@ import index from '@/pages/tabbar/index'
 import shop from '@/pages/tabbar/shop'
 import { onLoad } from '@dcloudio/uni-app'
 import { ref, onMounted, inject } from 'vue'
-
-let PageCur = ref('shop')
+import { route } from '@/common/config/index'
+let PageCur = ref('index')
+let navTitle = ref(route[0].title)
 const shopRef = ref(null)
 
 function navChange(e) {
   PageCur.value = e.currentTarget.dataset.cur
+  navTitle.value = e.currentTarget.dataset.title
 }
 
 onLoad(() => {})
@@ -46,13 +48,12 @@ onLoad(() => {})
 
 <style lang="scss" scoped>
 .index {
-  overflow: auto;
   position: relative;
   @include flex-c;
   .main {
     flex: 1 0 0;
-    overflow: auto;
-    padding-bottom: 100rpx;
+    overflow: hidden;
+    padding-bottom: calc(100rpx + env(safe-area-inset-bottom) / 2);
   }
   .tabbar {
     width: 100%;
