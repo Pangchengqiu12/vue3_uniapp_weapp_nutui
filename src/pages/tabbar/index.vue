@@ -3,15 +3,26 @@
     <view class="main">
       <input type="text" />
       <!-- <button @click="navChange">点击</button> -->
-      <view class="demo">
+      <!-- <view class="demo">
         <view class="list" v-for="(item, index) in 20" :key="index">{{ item }}</view>
-      </view>
-      <nut-button type="primary" @click="navChange">主要按钮</nut-button>
+      </view> -->
+      <nut-button type="primary" @click="login">登录</nut-button>
     </view>
   </view>
 </template>
 
-<script setup></script>
+<script setup>
+import { Login } from '@/common/api/demo_api'
+import { useMemberStore } from '@/stores'
+let { setUserInfo } = useMemberStore()
+async function login() {
+  let { code, data } = await Login({
+    username: 125000014,
+    password: 125000014,
+  })
+  code === 0 ? setUserInfo(data) : ''
+}
+</script>
 
 <style lang="scss" scoped>
 .page {
