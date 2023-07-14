@@ -11,7 +11,7 @@ export const IMGIP = import.meta.env.VITE_IMG //图片ip
 export let routeWhiteList = new Map([['app-api/crm/notice/read', true]])
 
 /**
- * @description:ResultCode
+ * {{SUCCESS，NO_LOGIN}} ResultCode
  */
 export const ResultCode = {
   SUCCESS: 0,

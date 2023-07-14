@@ -2,25 +2,34 @@ import { routeWhiteList, ResultCode } from './config.js'
 import { showToast } from '../util.js'
 import { useMemberStore } from '@/stores'
 let { VITE_BASE_API, VITE_TIMEOUT } = import.meta.env
+
+/**
+ * {{ successMessage: 成功提示, errorMessage：失败提示, cancelSame：取消相同请求, isRetry：是否重试, retryTimes：重试次数, loading：是否开启加载动画 }} defaultConfig
+ */
 const defaultConfig = {
-  successMessage: false, //成功提示
-  errorMessage: true, //失败提示
-  cancelSame: true, //取消相同请求
-  isRetry: false, //是否重试
-  retryTimes: 2, //重试次数
-  loading: false, //是否开启加载动画
+  successMessage: false,
+  errorMessage: true,
+  cancelSame: true,
+  isRetry: false,
+  retryTimes: 2,
+  loading: false,
 }
+
+/**
+ * 开启关闭重复请求时保存上次的请求地址
+ */
 let requestCom = ''
+
 /**
  * 请求
  * @param {Object} { method, url, param }
  * @param {Object} options  {
-  successMessage: false, //成功提示
-  errorMessage: true, //失败提示
-  cancelSame: false, //取消相同请求
-  isRetry: false, //是否重试
-  retryTimes: 2, //重试次数
-  loading: false, //是否开启加载动画
+  successMessage: false,
+  errorMessage: true,
+  cancelSame: false,
+  isRetry: false,
+  retryTimes: 2,
+  loading: false,
 }
  */
 const request = ({ method, url, param }, options) => {
@@ -91,7 +100,14 @@ const request = ({ method, url, param }, options) => {
  *
  * @param {string} url
  * @param {object} param
- * @param {object} config 默认值{} 可选值{  successMessage: false, //成功提示errorMessage: true, //失败提示cancelSame: false, //取消相同请求 isRetry: false, //是否重试retryTimes: 2, //重试次数loadingfalse, //是否开启加载动画}
+ * @param {{
+ * successMessage:boolean,
+ *  errorMessage:boolean,
+ *  cancelSame:boolean,
+ *  isRetry:boolean,
+ *  retryTimes:number,
+ *  loading:boolean
+ * }} [config={}] - 默认值{}- successMessage:成功提示- errorMessage:失败提示- cancelSame:取消相同请求- isRetry:是否重试- retryTimes:重试次数- loading:是否开启加载动画
  * @returns {function request({method: 'POST',url,param,},options,) {}}
  */
 export function $post(url, param, config) {
@@ -110,7 +126,14 @@ export function $post(url, param, config) {
  *
  * @param {string} url
  * @param {object} param
- * @param {object} config 默认值{} 可选值{  successMessage: false, //成功提示errorMessage: true, //失败提示cancelSame: false, //取消相同请求 isRetry: false, //是否重试retryTimes: 2, //重试次数loadingfalse, //是否开启加载动画}
+ * @param {{
+ * successMessage:boolean,
+ *  errorMessage:boolean,
+ *  cancelSame:boolean,
+ *  isRetry:boolean,
+ *  retryTimes:number,
+ *  loading:boolean
+ * }} [config={}] - 默认值{}- successMessage:成功提示- errorMessage:失败提示- cancelSame:取消相同请求- isRetry:是否重试- retryTimes:重试次数- loading:是否开启加载动画
  * @returns {function request({method: 'GET',url,param,},options,) {}}
  */
 export function $get(url, param, config = {}) {
@@ -130,7 +153,14 @@ export function $get(url, param, config = {}) {
  *
  * @param {string} url
  * @param {object} param
- * @param {object} config 默认值{} 可选值{  successMessage: false, //成功提示errorMessage: true, //失败提示cancelSame: false, //取消相同请求 isRetry: false, //是否重试retryTimes: 2, //重试次数loadingfalse, //是否开启加载动画}
+ * @param {{
+ * successMessage:boolean,
+ *  errorMessage:boolean,
+ *  cancelSame:boolean,
+ *  isRetry:boolean,
+ *  retryTimes:number,
+ *  loading:boolean
+ * }} [config={}] - 默认值{}- successMessage:成功提示- errorMessage:失败提示- cancelSame:取消相同请求- isRetry:是否重试- retryTimes:重试次数- loading:是否开启加载动画
  * @returns {function request({method: 'PUT',url,param,},options,) {}}
  */
 export function $put(url, param, config) {
@@ -149,7 +179,14 @@ export function $put(url, param, config) {
  *
  * @param {string} url
  * @param {object} param
- * @param {object} config 默认值{} 可选值{  successMessage: false, //成功提示errorMessage: true, //失败提示cancelSame: false, //取消相同请求 isRetry: false, //是否重试retryTimes: 2, //重试次数loadingfalse, //是否开启加载动画}
+ * @param {{
+ * successMessage:boolean,
+ *  errorMessage:boolean,
+ *  cancelSame:boolean,
+ *  isRetry:boolean,
+ *  retryTimes:number,
+ *  loading:boolean
+ * }} [config={}] - 默认值{}- successMessage:成功提示- errorMessage:失败提示- cancelSame:取消相同请求- isRetry:是否重试- retryTimes:重试次数- loading:是否开启加载动画
  * @returns {function request({method: 'DELETE',url,param,},options,) {}}
  */
 export function $delete(url, param, config) {
