@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import { Login } from '../../common/api/demo_api'
+import { Login } from '@/api/demo_api'
 import { useMemberStore } from '@/stores'
 let { setUserInfo } = useMemberStore()
 async function login() {
@@ -20,6 +20,7 @@ async function login() {
     username: 125000014,
     password: 125000014,
   })
+  console.log(1111111)
   code === 0 ? setUserInfo(data) : ''
 }
 </script>
@@ -35,3 +36,4 @@ async function login() {
   }
 }
 </style>
+../../api/demo_api

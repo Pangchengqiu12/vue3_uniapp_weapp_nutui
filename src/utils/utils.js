@@ -2,6 +2,8 @@
  *@param {Function} callback 传入的执行函数
  *@param {Number} delay 延迟的时间单位毫秒，默认500
  *@return {Function}
+ *@example
+ * cont addDebounce= debounce(callback, delay = 500)
  */
 export function debounce(callback, delay = 500) {
   let timer = null

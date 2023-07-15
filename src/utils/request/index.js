@@ -4,7 +4,13 @@ import { useMemberStore } from '@/stores'
 let { VITE_BASE_API, VITE_TIMEOUT } = import.meta.env
 
 /**
- * {{ successMessage: 成功提示, errorMessage：失败提示, cancelSame：取消相同请求, isRetry：是否重试, retryTimes：重试次数, loading：是否开启加载动画 }} defaultConfig
+ * 默认配置
+ * @property {boolean} defaultConfig.successMessage 是否显示成功信息
+ * @property {boolean} defaultConfig.errorMessage 是否显示错误信息
+ * @property {boolean} defaultConfig.cancelSame 是否取消同一请求
+ * @property {boolean} defaultConfig.isRetry 是否重试
+ * @property {number} defaultConfig.retryTimes 重试次数
+ * @property {boolean} defaultConfig.loading 是否显示加载动画
  */
 const defaultConfig = {
   successMessage: false,

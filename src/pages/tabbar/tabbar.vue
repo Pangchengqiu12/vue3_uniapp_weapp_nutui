@@ -33,7 +33,7 @@ import index from '@/pages/tabbar/index'
 import shop from '@/pages/tabbar/shop'
 import { onLoad } from '@dcloudio/uni-app'
 import { ref, onMounted, inject } from 'vue'
-import { route } from '@/common/config/index'
+import { route } from '@/utils/request/config'
 let PageCur = ref('index')
 let navTitle = ref(route[0].title)
 const shopRef = ref(null)
