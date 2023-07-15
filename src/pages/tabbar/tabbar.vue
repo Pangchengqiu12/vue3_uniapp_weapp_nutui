@@ -34,11 +34,9 @@ import shop from '@/pages/tabbar/shop'
 import { onLoad } from '@dcloudio/uni-app'
 import { ref, onMounted, inject } from 'vue'
 import { route } from '@/common/config/index'
-console.log(import.meta.env)
 let PageCur = ref('index')
 let navTitle = ref(route[0].title)
 const shopRef = ref(null)
-
 function navChange(e) {
   PageCur.value = e.currentTarget.dataset.cur
   navTitle.value = e.currentTarget.dataset.title

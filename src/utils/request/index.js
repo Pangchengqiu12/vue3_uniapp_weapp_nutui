@@ -96,8 +96,27 @@ const request = ({ method, url, param }, options) => {
   })
 }
 
+// const requests = {
+//   post(url, param, config = {}) {
+//     const options = Object.assign({}, defaultConfig, config)
+//     return request({ method: 'POST', url, param }, options)
+//   },
+//   get(url, param, config = {}) {
+//     const options = Object.assign({}, defaultConfig, config)
+//     return request({ method: 'POST', url, param }, options)
+//   },
+//   put(url, param, config = {}) {
+//     const options = Object.assign({}, defaultConfig, config)
+//     return request({ method: 'POST', url, param }, options)
+//   },
+//   delete(url, param, config = {}) {
+//     const options = Object.assign({}, defaultConfig, config)
+//     return request({ method: 'POST', url, param }, options)
+//   },
+// }
+// export default requests
+
 /**
- *
  * @param {string} url
  * @param {object} param
  * @param {{

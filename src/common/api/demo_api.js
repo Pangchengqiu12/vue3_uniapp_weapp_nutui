@@ -1,8 +1,8 @@
-import * as request from '@/utils/request' //eslint-disable-line
-
-export function Login(param) {
-  return request.$post('app-api/crm/auth/jxs/login', param, {
+import * as request from '@/utils/request'
+export function Login() {
+  return request.$post('app-api/crm/auth/jxs/login', undefined, {
     successMessage: true,
     loading: true,
+    errorMessage: false,
   })
 }
