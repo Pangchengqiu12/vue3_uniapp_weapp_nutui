@@ -1,6 +1,7 @@
-import { routeWhiteList, ResultCode } from './config.js'
+import { ResultCode, reLaunchPage } from './config.js'
 import { showToast } from '../util.js'
 import { useMemberStore } from '@/stores'
+
 let { VITE_BASE_API, VITE_TIMEOUT } = import.meta.env
 
 /**
@@ -11,14 +12,28 @@ let { VITE_BASE_API, VITE_TIMEOUT } = import.meta.env
  * @property {boolean} defaultConfig.isRetry 是否重试
  * @property {number} defaultConfig.retryTimes 重试次数
  * @property {boolean} defaultConfig.loading 是否显示加载动画
+ * @property {boolean} defaultConfig.contentType 是否为json-true: application/x-www-form-urlencoded;charset=UTF-8;false:application/json;charset=UTF-8;
  */
 const defaultConfig = {
   successMessage: false,
   errorMessage: true,
-  cancelSame: true,
+  cancelSame: false,
   isRetry: false,
   retryTimes: 2,
   loading: false,
+  contentType: false,
+}
+
+/**
+ * @description:  contentType
+ */
+const ContentType = {
+  // json
+  JSON: 'application/json;charset=UTF-8',
+  // form-data qs
+  FORM_URLENCODED: 'application/x-www-form-urlencoded;charset=UTF-8',
+  // form-data  upload
+  FORM_DATA: 'multipart/form-data;charset=UTF-8',
 }
 
 /**
@@ -29,14 +44,15 @@ let requestCom = ''
 /**
  * 请求
  * @param {Object} { method, url, param }
- * @param {Object} options  {
-  successMessage: false,
-  errorMessage: true,
-  cancelSame: false,
-  isRetry: false,
-  retryTimes: 2,
-  loading: false,
-}
+ * @param {{
+ * successMessage:boolean,
+ *  errorMessage:boolean,
+ *  cancelSame:boolean,
+ *  isRetry:boolean,
+ *  retryTimes:number,
+ *  loading:boolean,
+ *  contentType:boolean
+ * }} [options={ successMessage: false,errorMessage: true, cancelSame: false,isRetry: false,retryTimes: 2,loading: false,contentType:false,}] - 默认值{}- successMessage:成功提示,默认:false;- errorMessage:失败提示,默认为：true；- cancelSame:取消相同请求，默认为:false;- isRetry:是否重试，默认为：false;- retryTimes:重试次数，默认为：2;- loading:是否开启加载动画，默认为：false;-contentType:是否为json，true: urlencoded,false:json，默认为false
  */
 const request = ({ method, url, param }, options) => {
   if (options.cancelSame) {
@@ -49,8 +65,9 @@ const request = ({ method, url, param }, options) => {
     //是否开启加载动画
     options.loading ? uni.showLoading({ title: '加载中' }) : ''
     let header = {}
-    if (method === 'GET' || method === 'DELETE' || routeWhiteList.get(url))
-      header['Content-Type'] = 'application/x-www-form-urlencoded'
+    if (method === 'GET' || method === 'DELETE' || options.contentType) {
+      header['Content-Type'] = ContentType.FORM_URLENCODED
+    }
     header.Authorization = `Bearer ${memberStore?.userInfo?.accessToken}`
     uni.request({
       url: VITE_BASE_API + url,
@@ -59,7 +76,7 @@ const request = ({ method, url, param }, options) => {
       header,
       timeout: VITE_TIMEOUT,
       success: (res) => {
-        if (res.statusCode !== 200) return
+        if (res.statusCode !== 200) return reject(res)
         let {
           data,
           data: { code, msg },
@@ -67,18 +84,7 @@ const request = ({ method, url, param }, options) => {
         if (code === ResultCode.SUCCESS) {
           options.successMessage ? showToast('success', msg) : '' //显示成功消息
         } else if (code === ResultCode.NO_LOGIN) {
-          uni.showModal({
-            title: '提示',
-            content: '当前用户未登陆，请前往登录页进行登陆',
-            success: (res) => {
-              if (res.confirm) {
-                //跳转至授权页面
-                uni.reLaunch({ url: '/pages/login/index' })
-              } else {
-                uni.reLaunch({ url: '/pages/index/index' })
-              }
-            },
-          })
+          reLaunchPage()
         } else {
           options.errorMessage ? showToast('error', msg) : ''
         }
@@ -131,8 +137,9 @@ const request = ({ method, url, param }, options) => {
  *  cancelSame:boolean,
  *  isRetry:boolean,
  *  retryTimes:number,
- *  loading:boolean
- * }} [config={}] - 默认值{}- successMessage:成功提示- errorMessage:失败提示- cancelSame:取消相同请求- isRetry:是否重试- retryTimes:重试次数- loading:是否开启加载动画
+ *  loading:boolean,
+ *  contentType:boolean
+ * }} [config={}] - 默认值{}- successMessage:成功提示,默认:false;- errorMessage:失败提示,默认为：true；- cancelSame:取消相同请求，默认为:false;- isRetry:是否重试，默认为：false;- retryTimes:重试次数，默认为：2;- loading:是否开启加载动画，默认为：false;-contentType:是否为json，true: urlencoded,false:json，默认为false
  * @returns {function request({method: 'POST',url,param,},options,) {}}
  */
 export function $post(url, param, config) {
@@ -157,8 +164,9 @@ export function $post(url, param, config) {
  *  cancelSame:boolean,
  *  isRetry:boolean,
  *  retryTimes:number,
- *  loading:boolean
- * }} [config={}] - 默认值{}- successMessage:成功提示- errorMessage:失败提示- cancelSame:取消相同请求- isRetry:是否重试- retryTimes:重试次数- loading:是否开启加载动画
+ *  loading:boolean,
+ *  contentType:boolean
+ * }} [config={}] - 默认值{}- successMessage:成功提示,默认:false;- errorMessage:失败提示,默认为：true；- cancelSame:取消相同请求，默认为:false;- isRetry:是否重试，默认为：false;- retryTimes:重试次数，默认为：2;- loading:是否开启加载动画，默认为：false;-contentType:是否为json，true: urlencoded,false:json，默认为false
  * @returns {function request({method: 'GET',url,param,},options,) {}}
  */
 export function $get(url, param, config = {}) {
@@ -184,8 +192,9 @@ export function $get(url, param, config = {}) {
  *  cancelSame:boolean,
  *  isRetry:boolean,
  *  retryTimes:number,
- *  loading:boolean
- * }} [config={}] - 默认值{}- successMessage:成功提示- errorMessage:失败提示- cancelSame:取消相同请求- isRetry:是否重试- retryTimes:重试次数- loading:是否开启加载动画
+ *  loading:boolean,
+ *  contentType:boolean
+ * }} [config={}] - 默认值{}- successMessage:成功提示,默认:false;- errorMessage:失败提示,默认为：true；- cancelSame:取消相同请求，默认为:false;- isRetry:是否重试，默认为：false;- retryTimes:重试次数，默认为：2;- loading:是否开启加载动画，默认为：false;-contentType:是否为json，true: urlencoded,false:json，默认为false
  * @returns {function request({method: 'PUT',url,param,},options,) {}}
  */
 export function $put(url, param, config) {
@@ -210,8 +219,9 @@ export function $put(url, param, config) {
  *  cancelSame:boolean,
  *  isRetry:boolean,
  *  retryTimes:number,
- *  loading:boolean
- * }} [config={}] - 默认值{}- successMessage:成功提示- errorMessage:失败提示- cancelSame:取消相同请求- isRetry:是否重试- retryTimes:重试次数- loading:是否开启加载动画
+ *  loading:boolean,
+ *  contentType:boolean
+ * }} [config={}] - 默认值{}- successMessage:成功提示,默认:false;- errorMessage:失败提示,默认为：true；- cancelSame:取消相同请求，默认为:false;- isRetry:是否重试，默认为：false;- retryTimes:重试次数，默认为：2;- loading:是否开启加载动画，默认为：false;-contentType:是否为json，true: urlencoded,false:json，默认为false
  * @returns {function request({method: 'DELETE',url,param,},options,) {}}
  */
 export function $delete(url, param, config) {
