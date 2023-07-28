@@ -66,7 +66,6 @@ const request = ({ method, url, param }, options) => {
         } = res
         if (code === ResultCode.SUCCESS) {
           options.successMessage ? showToast('success', msg) : '' //显示成功消息
-          resolve(data)
         } else if (code === ResultCode.NO_LOGIN) {
           uni.showModal({
             title: '提示',
@@ -82,8 +81,8 @@ const request = ({ method, url, param }, options) => {
           })
         } else {
           options.errorMessage ? showToast('error', msg) : ''
-          reject(data)
         }
+        resolve(data)
       },
       fail: (error) => {
         let { errMsg } = error
@@ -93,6 +92,7 @@ const request = ({ method, url, param }, options) => {
           options.retryTimes--
           request({ method, url, param }, options)
         }
+        reject(errMsg)
       },
       complete: () => {
         options.loading ? uni.hideLoading() : ''

@@ -27,3 +27,19 @@ export function checkPhone(phoneNumber) {
   let phone = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/
   return phone.test(phoneNumber)
 }
+// /**
+//  * 格式化数字保留两位小数
+//  */
+// export const formatter = new Intl.NumberFormat('en-US', {
+//   minimumFractionDigits: 2,
+//   maximumFractionDigits: 2,
+
+// })
+
+/**
+ * 格式化数字 小数点后两位
+ * @param {number} num 数字
+ */
+export function formatNum(num) {
+  return Math.round((num * 1000) / 10) / 100
+}
