@@ -17,7 +17,7 @@ let { VITE_BASE_API, VITE_TIMEOUT } = import.meta.env
 const defaultConfig = {
   successMessage: false,
   errorMessage: true,
-  cancelSame: false,
+  cancelSame: true,
   isRetry: false,
   retryTimes: 2,
   loading: false,
@@ -90,15 +90,20 @@ const request = ({ method, url, param }, options) => {
         }
         resolve(data)
       },
-      fail: (error) => {
+      fail: async (error) => {
         let { errMsg } = error
         options.errorMessage ? showToast('error', errMsg) : ''
         if (options.isRetry && options.retryTimes > 0) {
           console.log(options, 23)
           options.retryTimes--
-          request({ method, url, param }, options)
+          let {
+            data,
+            data: { code },
+          } = await request({ method, url, param }, options)
+          code === ResultCode.SUCCESS ? resolve(data) : ''
+        } else {
+          reject(errMsg)
         }
-        reject(errMsg)
       },
       complete: () => {
         options.loading ? uni.hideLoading() : ''
