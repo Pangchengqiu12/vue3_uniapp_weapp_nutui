@@ -16,11 +16,11 @@
 </template>
 
 <script setup>
-import { inject, ref, computed } from 'vue'
+import { inject, ref, computed } from 'vue';
 
-let globalData = inject('globalData')
-let statusBar = ref(globalData.value.StatusBar)
-let customBar = ref(globalData.value.CustomBar)
+let globalData = inject('globalData');
+let statusBar = ref(globalData.value.StatusBar);
+let customBar = ref(globalData.value.CustomBar);
 
 const props = defineProps({
   bgColor: {
@@ -35,25 +35,25 @@ const props = defineProps({
     type: String,
     default: '',
   },
-})
+});
 
 const style = computed(() => {
-  let StatusBar = statusBar.value
-  let CustomBar = customBar.value
-  let bgImage = props.bgImage
-  let style = `height:${CustomBar}px;padding-top:${StatusBar}px;`
+  let StatusBar = statusBar.value;
+  let CustomBar = customBar.value;
+  let bgImage = props.bgImage;
+  let style = `height:${CustomBar}px;padding-top:${StatusBar}px;`;
   if (props.bgImage) {
-    style = `${style}background-image:url(${bgImage});`
+    style = `${style}background-image:url(${bgImage});`;
   }
   if (props.bgColor) {
-    style = `${style}background-color:${props.bgColor};`
+    style = `${style}background-color:${props.bgColor};`;
   }
-  return style
-})
+  return style;
+});
 function BackPage() {
   uni.navigateBack({
     delta: 1,
-  })
+  });
 }
 </script>
 

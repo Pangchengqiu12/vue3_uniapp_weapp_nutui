@@ -12,16 +12,16 @@
 </template>
 
 <script setup>
-import { Login } from '@/api/demo_api'
-import { useMemberStore } from '@/stores'
-let { setUserInfo } = useMemberStore()
+import { Login } from '@/api/demo_api';
+import { useMemberStore } from '@/stores';
+let { setUserInfo } = useMemberStore();
 async function login() {
   let { code, data } = await Login({
     username: 125000014,
     password: 125000014,
-  })
-  console.log(1111111)
-  code === 0 ? setUserInfo(data) : ''
+  });
+  console.log(1111111);
+  code === 0 ? setUserInfo(data) : '';
 }
 </script>
 

@@ -1,8 +1,8 @@
-import { ResultCode, reLaunchPage } from './config.js'
-import { showToast } from '../util.js'
-import { useMemberStore } from '@/stores'
+import { ResultCode, reLaunchPage } from './config.js';
+import { showToast } from '../util.js';
+import { useMemberStore } from '@/stores';
 
-let { VITE_BASE_API, VITE_TIMEOUT } = import.meta.env
+let { VITE_BASE_API, VITE_TIMEOUT } = import.meta.env;
 
 /**
  * 默认配置
@@ -22,7 +22,7 @@ const defaultConfig = {
   retryTimes: 2,
   loading: false,
   contentType: false,
-}
+};
 
 /**
  * @description:  contentType
@@ -34,12 +34,12 @@ const ContentType = {
   FORM_URLENCODED: 'application/x-www-form-urlencoded;charset=UTF-8',
   // form-data  upload
   FORM_DATA: 'multipart/form-data;charset=UTF-8',
-}
+};
 
 /**
  * 开启关闭重复请求时保存上次的请求地址
  */
-let requestCom = ''
+let requestCom = '';
 
 /**
  * 请求
@@ -56,19 +56,19 @@ let requestCom = ''
  */
 const request = ({ method, url, param }, options) => {
   if (options.cancelSame) {
-    let requestUrl = method + url + JSON.stringify(param || {})
-    if (requestCom === requestUrl) return Promise.reject('重复请求')
-    requestCom = requestUrl
+    let requestUrl = method + url + JSON.stringify(param || {});
+    if (requestCom === requestUrl) return Promise.reject('重复请求');
+    requestCom = requestUrl;
   }
-  const memberStore = useMemberStore()
+  const memberStore = useMemberStore();
   return new Promise((resolve, reject) => {
     //是否开启加载动画
-    options.loading ? uni.showLoading({ title: '加载中' }) : ''
-    let header = {}
+    options.loading ? uni.showLoading({ title: '加载中' }) : '';
+    let header = {};
     if (method === 'GET' || method === 'DELETE' || options.contentType) {
-      header['Content-Type'] = ContentType.FORM_URLENCODED
+      header['Content-Type'] = ContentType.FORM_URLENCODED;
     }
-    header.Authorization = `Bearer ${memberStore?.userInfo?.accessToken}`
+    header.Authorization = `Bearer ${memberStore?.userInfo?.accessToken}`;
     uni.request({
       url: VITE_BASE_API + url,
       method,
@@ -76,42 +76,42 @@ const request = ({ method, url, param }, options) => {
       header,
       timeout: VITE_TIMEOUT,
       success: (res) => {
-        if (res.statusCode !== 200) return reject(res)
+        if (res.statusCode !== 200) return reject(res);
         let {
           data,
           data: { code, msg },
-        } = res
+        } = res;
         if (code === ResultCode.SUCCESS) {
-          options.successMessage ? showToast('success', msg) : '' //显示成功消息
+          options.successMessage ? showToast('success', msg) : ''; //显示成功消息
         } else if (code === ResultCode.NO_LOGIN) {
-          reLaunchPage()
+          reLaunchPage();
         } else {
-          options.errorMessage ? showToast('error', msg) : ''
+          options.errorMessage ? showToast('error', msg) : '';
         }
-        resolve(data)
+        resolve(data);
       },
       fail: async (error) => {
-        let { errMsg } = error
-        options.errorMessage ? showToast('error', errMsg) : ''
+        let { errMsg } = error;
+        options.errorMessage ? showToast('error', errMsg) : '';
         if (options.isRetry && options.retryTimes > 0) {
-          console.log(options, 23)
-          options.retryTimes--
+          console.log(options, 23);
+          options.retryTimes--;
           let {
             data,
             data: { code },
-          } = await request({ method, url, param }, options)
-          code === ResultCode.SUCCESS ? resolve(data) : ''
+          } = await request({ method, url, param }, options);
+          code === ResultCode.SUCCESS ? resolve(data) : '';
         } else {
-          reject(errMsg)
+          reject(errMsg);
         }
       },
       complete: () => {
-        options.loading ? uni.hideLoading() : ''
-        options.cancelSame ? (requestCom = '') : ''
+        options.loading ? uni.hideLoading() : '';
+        options.cancelSame ? (requestCom = '') : '';
       },
-    })
-  })
-}
+    });
+  });
+};
 
 // const requests = {
 //   post(url, param, config = {}) {
@@ -148,7 +148,7 @@ const request = ({ method, url, param }, options) => {
  * @returns {function request({method: 'POST',url,param,},options,) {}}
  */
 export function $post(url, param, config) {
-  const options = Object.assign({}, defaultConfig, config)
+  const options = Object.assign({}, defaultConfig, config);
   return request(
     {
       method: 'POST',
@@ -156,7 +156,7 @@ export function $post(url, param, config) {
       param,
     },
     options,
-  )
+  );
 }
 
 /**
@@ -175,8 +175,8 @@ export function $post(url, param, config) {
  * @returns {function request({method: 'GET',url,param,},options,) {}}
  */
 export function $get(url, param, config = {}) {
-  const options = Object.assign({}, defaultConfig, config)
-  console.log(options, config, 12)
+  const options = Object.assign({}, defaultConfig, config);
+  console.log(options, config, 12);
   return request(
     {
       method: 'GET',
@@ -184,7 +184,7 @@ export function $get(url, param, config = {}) {
       param,
     },
     options,
-  )
+  );
 }
 
 /**
@@ -203,7 +203,7 @@ export function $get(url, param, config = {}) {
  * @returns {function request({method: 'PUT',url,param,},options,) {}}
  */
 export function $put(url, param, config) {
-  const options = Object.assign({}, defaultConfig, config)
+  const options = Object.assign({}, defaultConfig, config);
   return request(
     {
       method: 'PUT',
@@ -211,7 +211,7 @@ export function $put(url, param, config) {
       param,
     },
     options,
-  )
+  );
 }
 
 /**
@@ -230,7 +230,7 @@ export function $put(url, param, config) {
  * @returns {function request({method: 'DELETE',url,param,},options,) {}}
  */
 export function $delete(url, param, config) {
-  const options = Object.assign({}, defaultConfig, config)
+  const options = Object.assign({}, defaultConfig, config);
   return request(
     {
       method: 'DELETE',
@@ -238,5 +238,5 @@ export function $delete(url, param, config) {
       param,
     },
     options,
-  )
+  );
 }

@@ -6,7 +6,7 @@
 //   }
 // })()
 // export const TIMEOUT = 5000
-export const IMGIP = import.meta.env.VITE_IMG //图片ip
+export const IMGIP = import.meta.env.VITE_IMG; //图片ip
 
 /**
  * {{SUCCESS，NO_LOGIN}} ResultCode
@@ -14,7 +14,7 @@ export const IMGIP = import.meta.env.VITE_IMG //图片ip
 export const ResultCode = {
   SUCCESS: 0,
   NO_LOGIN: 403,
-}
+};
 
 /**
  * @description 用户未登录跳转页面
@@ -26,15 +26,15 @@ export function reLaunchPage() {
     success: (res) => {
       if (res.confirm) {
         //跳转至授权页面
-        uni.reLaunch({ url: '/pages/login/index' })
+        uni.reLaunch({ url: '/pages/login/index' });
       } else {
-        uni.reLaunch({ url: '/pages/index/index' })
+        uni.reLaunch({ url: '/pages/index/index' });
       }
     },
-  })
+  });
 }
 
-export const ErrorMessage = {}
+export const ErrorMessage = {};
 export const route = [
   {
     name: 'index',
@@ -48,4 +48,4 @@ export const route = [
     icon: '../../static/tabBar/shop_cur.png',
     iconSel: '../../static/tabBar/shop.png',
   },
-]
+];
