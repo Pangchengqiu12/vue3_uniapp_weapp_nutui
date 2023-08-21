@@ -39,10 +39,10 @@ export function toFixed(num, fixed = 2) {
   if (numSplit.length == 1 || !numSplit[1][fixed] || numSplit[1][fixed] <= 4) {
     return num.toFixed(fixed);
   }
-  numSplit[1] = +numSplit[1].substring(0, fixed) + 1;
+  numSplit[1] = +numSplit[1].substring(0, fixed) + 1 + '';
   if (numSplit[1].length > fixed) {
     numSplit[0] = +numSplit[0] + 1;
-    numSplit[1] = numSplit[1].substring(0, fixed);
+    numSplit[1] = numSplit[1].substring(1, fixed + 1);
   }
   return numSplit.join('.');
 }
