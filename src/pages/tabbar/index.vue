@@ -36,4 +36,3 @@ async function login() {
   }
 }
 </style>
-../../api/demo_api
