@@ -7,6 +7,8 @@
         <view class="list" v-for="(item, index) in 20" :key="index">{{ item }}</view>
       </view> -->
       <nut-button type="primary" @click="login">登录</nut-button>
+      <button class="btn">红色</button>
+      <button class="btn2">新增</button>
     </view>
   </view>
 </template>
@@ -26,6 +28,12 @@ async function login() {
 </script>
 
 <style lang="scss" scoped>
+.btn {
+  background-color: $btnColor;
+}
+.btn2 {
+  background-color: $tabbarColorChecked;
+}
 .page {
   height: 100%;
   overflow-y: auto;
