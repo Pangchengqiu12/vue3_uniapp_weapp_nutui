@@ -27,5 +27,35 @@
     "navigationBarTitleText": "uni-app",
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8"
+  },
+  "subPackages": [
+    {
+      "root": "pagesA",
+      "pages": [
+        {
+          "path": "demo/index",
+          "style": {
+            "navigationBarTitleText": "pagesA"
+          }
+        }
+      ]
+    },
+    {
+      "root": "pagesB",
+      "pages": [
+        {
+          "path": "demo/index",
+          "style": {
+            "navigationBarTitleText": "pagesB"
+          }
+        }
+      ]
+    }
+  ],
+  "preloadRule": {
+    "pages/tabbar/tabbar": {
+      "network": "all",
+      "packages": ["pagesA"]
+    }
   }
 }

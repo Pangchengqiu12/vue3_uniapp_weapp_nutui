@@ -9,6 +9,7 @@
       <nut-button type="primary" @click="login">登录</nut-button>
       <button class="btn">红色</button>
       <button class="btn2">新增</button>
+      <navigator url="/pagesA/demo/index" open-type="navigate" hover-class="navigator-hover"> 去pagesA</navigator>
     </view>
   </view>
 </template>
